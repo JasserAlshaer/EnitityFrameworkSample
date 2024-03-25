@@ -7,5 +7,6 @@
         public string Phone { get; set; }
         public string Email { get; set; }
         public string Bio { get; set; }
+        public virtual Clinic Clinic { get; set; }  
     }
 }
