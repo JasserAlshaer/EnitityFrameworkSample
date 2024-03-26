@@ -42,7 +42,8 @@ namespace EnitityFrameworkSample.Controllers
             if (name == null && email == null && phone == null)
             {
                 // keep the empty list 
-            } else if (name != null && email == null && phone == null)
+            }
+            else if (name != null && email == null && phone == null)
             {
                 //Filltering With Name
                 result = _context.Paitents.Where(x => x.Name.Contains(name)).ToList();
@@ -83,7 +84,30 @@ namespace EnitityFrameworkSample.Controllers
             }
             return Ok(result);
         }
-
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult BasicJoinInEntityFrameWork()
+        {
+            // linq query old syntaxt
+            var res = from p in _context.Paitents
+                      join l in _context.Logins
+                      on p.Id equals l.Id
+                      select new
+                      {
+                          Id = p.Id,
+                          Name=p.Name,
+                          Email=l.UserName,
+                          Pass=l.Password
+                      }; //-- Get All Record 
+            return Ok(res);
+        }
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult EasyJoinInEntityFrameWork()
+        {
+            var res = _context.Paitents.Include(x=>x.Login).ToList();
+            return Ok(res);
+        }
         [HttpPost]
         [Route("[action]")]
         public IActionResult CreateNewPaitent(CreatePaitentRecord dto)
@@ -155,7 +179,6 @@ namespace EnitityFrameworkSample.Controllers
         {
             var paitent = _context.Paitents.Find(paitentId);
             var login = _context.Logins.Find(Id);
-            
 
 
             _context.Update(login);
